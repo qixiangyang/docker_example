@@ -1,0 +1,35 @@
+version: '3'
+services:
+    web:
+        networks:
+            - app-network
+        build: .
+        ports:
+            - "8888:5000"
+        volumes:
+            - .:/code
+        depends_on:
+            - mysql
+            - redis
+    redis:
+        image: redis
+        networks:
+            - app-network
+    mysql:
+        image: mysql:5.7.28
+        #        restart: always
+        environment:
+            MYSQL_DATABASE: 'test'
+            MYSQL_USER: 'root'
+            MYSQL_PASSWORD: '12345678'
+            MYSQL_ROOT_PASSWORD: '12345678'
+        ports:
+            - "4000:3306"
+        volumes:
+            - ./data_volume:/var/lib/mysql
+        networks:
+            - app-network
+
+networks:
+  app-network:
+    driver: bridge
